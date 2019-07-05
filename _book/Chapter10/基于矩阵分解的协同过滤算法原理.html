@@ -1,0 +1,1131 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>10.3:基于矩阵分解的协同过滤算法原理 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-katex/katex.min.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="基于矩阵分解的协同过滤算法流程.html" />
+    
+    
+    <link rel="prev" href="基于矩阵分解的协同过滤算法思想.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../Chapter1/">
+            
+                <a href="../Chapter1/">
+            
+                    
+                    第一章 绪论
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../Chapter1/为什么要数据挖掘.html">
+            
+                <a href="../Chapter1/为什么要数据挖掘.html">
+            
+                    
+                    1.1:为什么要数据挖掘
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../Chapter1/什么是数据挖掘.html">
+            
+                <a href="../Chapter1/什么是数据挖掘.html">
+            
+                    
+                    1.2: 什么是数据挖掘
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../Chapter1/数据挖掘主要任务.html">
+            
+                <a href="../Chapter1/数据挖掘主要任务.html">
+            
+                    
+                    1.3:数据挖掘主要任务
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../Chapter2/">
+            
+                <a href="../Chapter2/">
+            
+                    
+                    第二章 数据探索
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../Chapter2/数据与属性.html">
+            
+                <a href="../Chapter2/数据与属性.html">
+            
+                    
+                    2.1:数据与属性
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../Chapter2/数据的基本统计指标.html">
+            
+                <a href="../Chapter2/数据的基本统计指标.html">
+            
+                    
+                    2.2:数据的基本统计指标
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../Chapter2/数据可视化.html">
+            
+                <a href="../Chapter2/数据可视化.html">
+            
+                    
+                    2.3:数据可视化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../Chapter2/相似性度量.html">
+            
+                <a href="../Chapter2/相似性度量.html">
+            
+                    
+                    2.4:相似性度量
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../Chapter3/">
+            
+                <a href="../Chapter3/">
+            
+                    
+                    第三章 数据预处理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../Chapter3/为什么要数据预处理.html">
+            
+                <a href="../Chapter3/为什么要数据预处理.html">
+            
+                    
+                    3.1:为什么要数据预处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../Chapter3/标准化.html">
+            
+                <a href="../Chapter3/标准化.html">
+            
+                    
+                    3.2:标准化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../Chapter3/非线性变换.html">
+            
+                <a href="../Chapter3/非线性变换.html">
+            
+                    
+                    3.3:非线性变换
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../Chapter3/归一化.html">
+            
+                <a href="../Chapter3/归一化.html">
+            
+                    
+                    3.4:归一化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../Chapter3/离散值编码.html">
+            
+                <a href="../Chapter3/离散值编码.html">
+            
+                    
+                    3.5:离散值编码
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../Chapter3/生成多项式特征.html">
+            
+                <a href="../Chapter3/生成多项式特征.html">
+            
+                    
+                    3.6:生成多项式特征
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../Chapter3/估算缺失值.html">
+            
+                <a href="../Chapter3/估算缺失值.html">
+            
+                    
+                    3.7:估算缺失值
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Chapter4/">
+            
+                <a href="../Chapter4/">
+            
+                    
+                    第四章 k-近邻
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../Chapter4/k-近邻算法思想.html">
+            
+                <a href="../Chapter4/k-近邻算法思想.html">
+            
+                    
+                    4.1:k-近邻算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../Chapter4/k-近邻算法原理.html">
+            
+                <a href="../Chapter4/k-近邻算法原理.html">
+            
+                    
+                    4.2:k-近邻算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../Chapter4/k-近邻算法流程.html">
+            
+                <a href="../Chapter4/k-近邻算法流程.html">
+            
+                    
+                    4.3:k-近邻算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../Chapter4/动手实现k-近邻.html">
+            
+                <a href="../Chapter4/动手实现k-近邻.html">
+            
+                    
+                    4.4:动手实现k-近邻
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../Chapter4/实战案例.html">
+            
+                <a href="../Chapter4/实战案例.html">
+            
+                    
+                    4.5:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../Chapter5/">
+            
+                <a href="../Chapter5/">
+            
+                    
+                    第五章 线性回归
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../Chapter5/线性回归算法思想.html">
+            
+                <a href="../Chapter5/线性回归算法思想.html">
+            
+                    
+                    5.1:线性回归算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../Chapter5/线性回归算法原理.html">
+            
+                <a href="../Chapter5/线性回归算法原理.html">
+            
+                    
+                    5.2:线性回归算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../Chapter5/线性回归算法流程.html">
+            
+                <a href="../Chapter5/线性回归算法流程.html">
+            
+                    
+                    5.3:线性回归算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../Chapter5/动手实现线性回归.html">
+            
+                <a href="../Chapter5/动手实现线性回归.html">
+            
+                    
+                    5.4:动手实现线性回归
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../Chapter5/实战案例.html">
+            
+                <a href="../Chapter5/实战案例.html">
+            
+                    
+                    5.5:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Chapter6/">
+            
+                <a href="../Chapter6/">
+            
+                    
+                    第六章 决策树
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../Chapter6/决策树算法思想.html">
+            
+                <a href="../Chapter6/决策树算法思想.html">
+            
+                    
+                    6.1:决策树算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="../Chapter6/决策树算法原理.html">
+            
+                <a href="../Chapter6/决策树算法原理.html">
+            
+                    
+                    6.2:决策树算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../Chapter6/决策树算法流程.html">
+            
+                <a href="../Chapter6/决策树算法流程.html">
+            
+                    
+                    6.3:决策树算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../Chapter6/动手实现决策树.html">
+            
+                <a href="../Chapter6/动手实现决策树.html">
+            
+                    
+                    6.4:动手实现决策树
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../Chapter6/实战案例.html">
+            
+                <a href="../Chapter6/实战案例.html">
+            
+                    
+                    6.5:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../Chapter7/">
+            
+                <a href="../Chapter7/">
+            
+                    
+                    第七章 k-均值
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.8.1" data-path="../Chapter7/k-均值算法思想.html">
+            
+                <a href="../Chapter7/k-均值算法思想.html">
+            
+                    
+                    7.1:k-均值算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.2" data-path="../Chapter7/k-均值算法原理.html">
+            
+                <a href="../Chapter7/k-均值算法原理.html">
+            
+                    
+                    7.2:k-均值算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.3" data-path="../Chapter7/k-均值算法流程.html">
+            
+                <a href="../Chapter7/k-均值算法流程.html">
+            
+                    
+                    7.3:k-均值算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.4" data-path="../Chapter7/动手实现k-均值.html">
+            
+                <a href="../Chapter7/动手实现k-均值.html">
+            
+                    
+                    7.4:动手实现k-均值
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8.5" data-path="../Chapter7/实战案例.html">
+            
+                <a href="../Chapter7/实战案例.html">
+            
+                    
+                    7.5:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../Chapter8/">
+            
+                <a href="../Chapter8/">
+            
+                    
+                    第八章 Apriori
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.9.1" data-path="../Chapter8/Apriori算法思想.html">
+            
+                <a href="../Chapter8/Apriori算法思想.html">
+            
+                    
+                    8.1:Apriori算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.2" data-path="../Chapter8/Apriori算法原理.html">
+            
+                <a href="../Chapter8/Apriori算法原理.html">
+            
+                    
+                    8.2:Apriori算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.3" data-path="../Chapter8/Apriori算法流程.html">
+            
+                <a href="../Chapter8/Apriori算法流程.html">
+            
+                    
+                    8.3:Apriori算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.4" data-path="../Chapter8/动手实现Apriori.html">
+            
+                <a href="../Chapter8/动手实现Apriori.html">
+            
+                    
+                    8.4:动手实现Apriori
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9.5" data-path="../Chapter8/实战案例.html">
+            
+                <a href="../Chapter8/实战案例.html">
+            
+                    
+                    8.5:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../Chapter9/">
+            
+                <a href="../Chapter9/">
+            
+                    
+                    第九章 PageRank
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../Chapter9/PageRank算法思想.html">
+            
+                <a href="../Chapter9/PageRank算法思想.html">
+            
+                    
+                    9.1:PageRank算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.2" data-path="../Chapter9/PageRank算法原理.html">
+            
+                <a href="../Chapter9/PageRank算法原理.html">
+            
+                    
+                    9.2:PageRank算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.3" data-path="../Chapter9/PageRank算法流程.html">
+            
+                <a href="../Chapter9/PageRank算法流程.html">
+            
+                    
+                    9.3:PageRank算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.4" data-path="../Chapter9/动手实现PageRank.html">
+            
+                <a href="../Chapter9/动手实现PageRank.html">
+            
+                    
+                    9.4:动手实现PageRank
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10.5" data-path="../Chapter9/实战案例.html">
+            
+                <a href="../Chapter9/实战案例.html">
+            
+                    
+                    9.5:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    第十章 推荐系统
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.11.1" data-path="推荐系统概述.html">
+            
+                <a href="推荐系统概述.html">
+            
+                    
+                    10.1:推荐系统概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.2" data-path="基于矩阵分解的协同过滤算法思想.html">
+            
+                <a href="基于矩阵分解的协同过滤算法思想.html">
+            
+                    
+                    10.2:基于矩阵分解的协同过滤算法思想
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.11.3" data-path="基于矩阵分解的协同过滤算法原理.html">
+            
+                <a href="基于矩阵分解的协同过滤算法原理.html">
+            
+                    
+                    10.3:基于矩阵分解的协同过滤算法原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.4" data-path="基于矩阵分解的协同过滤算法流程.html">
+            
+                <a href="基于矩阵分解的协同过滤算法流程.html">
+            
+                    
+                    10.4:基于矩阵分解的协同过滤算法流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.5" data-path="动手实现基于矩阵分解的协同过滤.html">
+            
+                <a href="动手实现基于矩阵分解的协同过滤.html">
+            
+                    
+                    10.5:动手实现基于矩阵分解的协同过滤
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11.6" data-path="实战案例.html">
+            
+                <a href="实战案例.html">
+            
+                    
+                    10.6:实战案例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >10.3:基于矩阵分解的协同过滤算法原理</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="103&#x57FA;&#x4E8E;&#x77E9;&#x9635;&#x5206;&#x89E3;&#x7684;&#x534F;&#x540C;&#x8FC7;&#x6EE4;&#x7B97;&#x6CD5;&#x539F;&#x7406;">10.3:&#x57FA;&#x4E8E;&#x77E9;&#x9635;&#x5206;&#x89E3;&#x7684;&#x534F;&#x540C;&#x8FC7;&#x6EE4;&#x7B97;&#x6CD5;&#x539F;&#x7406;</h1>
+<p>&#x5C06;&#x7528;&#x6237;&#x559C;&#x597D;&#x77E9;&#x9635;&#x4E0E;&#x5185;&#x5BB9;&#x77E9;&#x9635;&#x8FDB;&#x884C;&#x77E9;&#x9635;&#x4E58;&#x6CD5;&#x5C31;&#x80FD;&#x5F97;&#x5230;&#x7528;&#x6237;&#x5BF9;&#x7269;&#x54C1;&#x7684;&#x9884;&#x6D4B;&#x7ED3;&#x679C;&#xFF0C;&#x800C;&#x6211;&#x4EEC;&#x7684;&#x76EE;&#x7684;&#x662F;&#x9884;&#x6D4B;&#x7ED3;&#x679C;&#x4E0E;&#x771F;&#x5B9E;&#x60C5;&#x51B5;&#x8D8A;&#x63A5;&#x8FD1;&#x8D8A;&#x597D;&#x3002;&#x6240;&#x4EE5;&#xFF0C;&#x6211;&#x4EEC;&#x5C06;&#x9884;&#x6D4B;&#x503C;&#x4E0E;&#x8BC4;&#x5206;&#x8868;&#x4E2D;&#x5DF2;&#x8BC4;&#x5206;&#x90E8;&#x5206;&#x7684;&#x503C;&#x6784;&#x9020;&#x5E73;&#x65B9;&#x5DEE;&#x635F;&#x5931;&#x51FD;&#x6570;&#xFF1A;</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>l</mi><mi>o</mi><mi>s</mi><mi>s</mi><mo>=</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><msub><mo>&#x2211;</mo><mrow><mo>(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo>)</mo><mo>&#x2208;</mo><mi>r</mi><mo>(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo>)</mo><mo>=</mo><mn>1</mn></mrow></msub><mo>(</mo><msub><mi>x</mi><mrow><mi>i</mi><mi>d</mi></mrow></msub><msub><mi>w</mi><mrow><mi>d</mi><mi>j</mi></mrow></msub><mo>&#x2212;</mo><msub><mi>y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msup><mo>)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">
+loss = \frac{1}{2}\sum\limits_{(i,j)\in r(i,j)=1}(x_{id}w_{dj}-y_{ij})^2
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.32144em;"></span><span class="strut bottom" style="height:2.8374449999999998em;vertical-align:-1.516005em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mrel">=</span><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="mopen sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm">2</span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm">1</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span><span class="mclose sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mop op-limits"><span class="vlist"><span style="top:1.241005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mopen mtight">(</span><span class="mord mathit mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span><span class="mclose mtight">)</span><span class="mrel mtight">&#x2208;</span><span class="mord mathit mtight" style="margin-right:0.02778em;">r</span><span class="mopen mtight">(</span><span class="mord mathit mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span><span class="mclose mtight">)</span><span class="mrel mtight">=</span><span class="mord mathrm mtight">1</span></span></span></span><span style="top:-0.000005000000000032756em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span><span class="mop op-symbol large-op">&#x2211;</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathit">x</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight">d</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">d</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mbin">&#x2212;</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle uncramped mtight"><span class="mord mathrm mtight">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span></span></span></span></span></p>
+<p>&#x5176;&#x4E2D;&#xFF1A;</p>
+<ul>
+<li>i:&#x7B2C;i&#x4E2A;&#x7528;&#x6237;</li>
+<li>j:&#x7B2C;j&#x4E2A;&#x7269;&#x54C1;</li>
+<li>d:&#x7B2C;d&#x79CD;&#x56E0;&#x7D20;</li>
+<li>x:&#x7528;&#x6237;&#x559C;&#x597D;&#x77E9;&#x9635;</li>
+<li>w:&#x5185;&#x5BB9;&#x77E9;&#x9635;</li>
+<li>y:&#x8BC4;&#x5206;&#x77E9;&#x9635;</li>
+<li>r:&#x8BC4;&#x5206;&#x8BB0;&#x5F55;&#x77E9;&#x9635;&#xFF0C;&#x65E0;&#x8BC4;&#x5206;&#x8BB0;&#x4E3A;0&#xFF0C;&#x6709;&#x8BC4;&#x5206;&#x8BB0;&#x4E3A;1&#x3002;r(i,j)=1&#x4EE3;&#x8868;&#x7528;&#x6237;i&#x5BF9;&#x7269;&#x54C1;j&#x8FDB;&#x884C;&#x8FC7;&#x8BC4;&#x5206;&#xFF0C;r(i,j)=0&#x4EE3;&#x8868;&#x7528;&#x6237;i&#x5BF9;&#x7269;&#x54C1;j&#x672A;&#x8FDB;&#x884C;&#x8FC7;&#x8BC4;&#x5206;</li>
+</ul>
+<p>&#x635F;&#x5931;&#x51FD;&#x6570;<code>python</code>&#x5B9E;&#x73B0;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+loss = np.mean(np.multiply((y-np.dot(x,w))**<span class="hljs-number">2</span>,record))
+</code></pre>
+<p>&#x5176;&#x4E2D;&#xFF0C;<code>record</code>&#x4E3A;&#x8BC4;&#x5206;&#x8BB0;&#x5F55;&#x77E9;&#x9635;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x7684;&#x76EE;&#x7684;&#x5C31;&#x662F;&#x6700;&#x5C0F;&#x5316;&#x5E73;&#x65B9;&#x5DEE;&#x635F;&#x5931;&#x51FD;&#x6570;&#xFF0C;&#x901A;&#x5E38;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x90FD;&#x662F;&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x65B9;&#x6CD5;&#x6765;&#x6700;&#x5C0F;&#x5316;&#x635F;&#x5931;&#x51FD;&#x6570;&#x5F97;&#x5230;&#x6B63;&#x786E;&#x7684;&#x53C2;&#x6570;&#x3002;</p>
+<p>&#x5BF9;&#x6BCF;&#x4E2A;&#x53C2;&#x6570;&#x6C42;&#x5F97;&#x504F;&#x5BFC;&#x5982;&#x4E0B;&#xFF1A;</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi mathvariant="normal">&#x2202;</mi><mi>l</mi><mi>o</mi><mi>s</mi><mi>s</mi></mrow><mrow><mi mathvariant="normal">&#x2202;</mi><msub><mi>x</mi><mrow><mi>i</mi><mi>d</mi></mrow></msub></mrow></mfrac><mo>=</mo><msub><mo>&#x2211;</mo><mrow><mi>j</mi><mo>&#x2208;</mo><mi>r</mi><mo>(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo>)</mo><mo>=</mo><mn>1</mn></mrow></msub><mo>(</mo><msub><mi>x</mi><mrow><mi>i</mi><mi>d</mi></mrow></msub><msub><mi>w</mi><mrow><mi>d</mi><mi>j</mi></mrow></msub><mo>&#x2212;</mo><msub><mi>y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>)</mo><msub><mi>w</mi><mrow><mi>d</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+\frac{\partial loss}{\partial x_{id}} = \sum\limits_{j\in r(i,j)=1}(x_{id}w_{dj}-y_{ij})w_{dj}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.37144em;"></span><span class="strut bottom" style="height:2.887445em;vertical-align:-1.516005em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="mopen sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.686em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm" style="margin-right:0.05556em;">&#x2202;</span><span class="mord"><span class="mord mathit">x</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight">d</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm" style="margin-right:0.05556em;">&#x2202;</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">s</span><span class="mord mathit">s</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span><span class="mclose sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:1.241005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">&#x2208;</span><span class="mord mathit mtight" style="margin-right:0.02778em;">r</span><span class="mopen mtight">(</span><span class="mord mathit mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span><span class="mclose mtight">)</span><span class="mrel mtight">=</span><span class="mord mathrm mtight">1</span></span></span></span><span style="top:-0.000005000000000032756em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span><span class="mop op-symbol large-op">&#x2211;</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathit">x</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight">d</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">d</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mbin">&#x2212;</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">d</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span></span></span></span></span></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi mathvariant="normal">&#x2202;</mi><mi>l</mi><mi>o</mi><mi>s</mi><mi>s</mi></mrow><mrow><mi mathvariant="normal">&#x2202;</mi><msub><mi>w</mi><mrow><mi>d</mi><mi>j</mi></mrow></msub></mrow></mfrac><mo>=</mo><msub><mo>&#x2211;</mo><mrow><mi>i</mi><mo>&#x2208;</mo><mi>r</mi><mo>(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo>)</mo><mo>=</mo><mn>1</mn></mrow></msub><mo>(</mo><msub><mi>x</mi><mrow><mi>i</mi><mi>d</mi></mrow></msub><msub><mi>w</mi><mrow><mi>d</mi><mi>j</mi></mrow></msub><mo>&#x2212;</mo><msub><mi>y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>)</mo><msub><mi>x</mi><mrow><mi>i</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+\frac{\partial loss}{\partial w_{dj}} = \sum\limits_{i\in r(i,j)=1}(x_{id}w_{dj}-y_{ij})x_{id}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.37144em;"></span><span class="strut bottom" style="height:2.887445em;vertical-align:-1.516005em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord reset-textstyle displaystyle textstyle uncramped"><span class="mopen sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span><span class="mfrac"><span class="vlist"><span style="top:0.6859999999999999em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle cramped"><span class="mord textstyle cramped"><span class="mord mathrm" style="margin-right:0.05556em;">&#x2202;</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">d</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span></span></span></span><span style="top:-0.22999999999999998em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle uncramped frac-line"></span></span><span style="top:-0.677em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathrm" style="margin-right:0.05556em;">&#x2202;</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">s</span><span class="mord mathit">s</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span><span class="mclose sizing reset-size5 size5 reset-textstyle textstyle uncramped nulldelimiter"></span></span><span class="mrel">=</span><span class="mop op-limits"><span class="vlist"><span style="top:1.241005em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mrel mtight">&#x2208;</span><span class="mord mathit mtight" style="margin-right:0.02778em;">r</span><span class="mopen mtight">(</span><span class="mord mathit mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span><span class="mclose mtight">)</span><span class="mrel mtight">=</span><span class="mord mathrm mtight">1</span></span></span></span><span style="top:-0.000005000000000032756em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span><span class="mop op-symbol large-op">&#x2211;</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathit">x</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight">d</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.02691em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">d</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mbin">&#x2212;</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mclose">)</span><span class="mord"><span class="mord mathit">x</span><span class="msupsub"><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle cramped mtight"><span class="mord scriptstyle cramped mtight"><span class="mord mathit mtight">i</span><span class="mord mathit mtight">d</span></span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span></span></span></span></span></p>
+<p>&#x5219;&#x68AF;&#x5EA6;&#x4E3A;&#xFF1A;</p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">&#x394;</mi><mi>x</mi><mo>=</mo><mi>r</mi><mi mathvariant="normal">.</mi><mo>(</mo><mi>x</mi><mi>w</mi><mo>&#x2212;</mo><mi>y</mi><mo>)</mo><msup><mi>w</mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">
+\Delta x = r.(xw-y)w^T
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8913309999999999em;"></span><span class="strut bottom" style="height:1.1413309999999999em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">&#x394;</span><span class="mord mathit">x</span><span class="mrel">=</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathrm">.</span><span class="mopen">(</span><span class="mord mathit">x</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">&#x2212;</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mord"><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle uncramped mtight"><span class="mord mathit mtight" style="margin-right:0.13889em;">T</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span></span></span></span></span></p>
+<p><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">&#x394;</mi><mi>w</mi><mo>=</mo><msup><mi>x</mi><mi>T</mi></msup><mo>[</mo><mo>(</mo><mi>x</mi><mi>w</mi><mo>&#x2212;</mo><mi>y</mi><mo>)</mo><mi mathvariant="normal">.</mi><mi>r</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">
+\Delta w = x^T[(xw-y).r]
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8913309999999999em;"></span><span class="strut bottom" style="height:1.1413309999999999em;vertical-align:-0.25em;"></span><span class="base displaystyle textstyle uncramped"><span class="mord mathrm">&#x394;</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mrel">=</span><span class="mord"><span class="mord mathit">x</span><span class="msupsub"><span class="vlist"><span style="top:-0.413em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span><span class="reset-textstyle scriptstyle uncramped mtight"><span class="mord mathit mtight" style="margin-right:0.13889em;">T</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">&#x200B;</span></span>&#x200B;</span></span></span></span><span class="mopen">[</span><span class="mopen">(</span><span class="mord mathit">x</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mbin">&#x2212;</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mclose">)</span><span class="mord mathrm">.</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mclose">]</span></span></span></span></span></p>
+<p>&#x5176;&#x4E2D;&#xFF1A;</p>
+<pre><code>.&#x8868;&#x793A;&#x70B9;&#x4E58;&#x6CD5;&#xFF0C;&#x65E0;&#x5219;&#x8868;&#x793A;&#x77E9;&#x9635;&#x76F8;&#x4E58;
+&#x4E0A;&#x6807;T&#x8868;&#x793A;&#x77E9;&#x9635;&#x8F6C;&#x7F6E;
+</code></pre><p>&#x68AF;&#x5EA6;<code>python</code>&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code class="lang-python">x_grads = np.dot(np.multiply(record,np.dot(x,w)-y),w.T)
+w_grads = np.dot(x.T,np.multiply(record,np.dot(x,w)-y))
+</code></pre>
+<p>&#x7136;&#x540E;&#x518D;&#x8FDB;&#x884C;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;:</p>
+<pre><code class="lang-python"><span class="hljs-comment">#&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#xFF0C;&#x66F4;&#x65B0;&#x53C2;&#x6570;</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(n_iter):
+    x_grads = np.dot(np.multiply(record,np.dot(x,w)-y),w.T)
+    w_grads = np.dot(x.T,np.multiply(record,np.dot(x,w)-y))
+    x = alpha*x - lr*x_grads
+    w = alpha*w - lr*w_grads
+</code></pre>
+<p>&#x5176;&#x4E2D;&#xFF1A;</p>
+<pre><code>n_iter:&#x8BAD;&#x7EC3;&#x8F6E;&#x6570;
+lr:&#x5B66;&#x4E60;&#x7387;
+alpha&#xFF1A;&#x6743;&#x91CD;&#x8870;&#x51CF;&#x7CFB;&#x6570;&#xFF0C;&#x7528;&#x6765;&#x9632;&#x6B62;&#x8FC7;&#x62DF;&#x5408;
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="基于矩阵分解的协同过滤算法思想.html" class="navigation navigation-prev " aria-label="Previous page: 10.2:基于矩阵分解的协同过滤算法思想">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="基于矩阵分解的协同过滤算法流程.html" class="navigation navigation-next " aria-label="Next page: 10.4:基于矩阵分解的协同过滤算法流程">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"10.3:基于矩阵分解的协同过滤算法原理","level":"1.11.3","depth":2,"next":{"title":"10.4:基于矩阵分解的协同过滤算法流程","level":"1.11.4","depth":2,"path":"Chapter10/基于矩阵分解的协同过滤算法流程.md","ref":"Chapter10/基于矩阵分解的协同过滤算法流程.md","articles":[]},"previous":{"title":"10.2:基于矩阵分解的协同过滤算法思想","level":"1.11.2","depth":2,"path":"Chapter10/基于矩阵分解的协同过滤算法思想.md","ref":"Chapter10/基于矩阵分解的协同过滤算法思想.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["fontsettings","sharing","lunr","search","highlight","livereload","katex","livereload"],"pluginsConfig":{"fontsettings":{"family":"sans","size":2,"theme":"white"},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"lunr":{"ignoreSpecialCharacters":false,"maxIndexSize":1000000},"search":{},"highlight":{},"livereload":{},"katex":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Chapter10/基于矩阵分解的协同过滤算法原理.md","mtime":"2019-07-05T00:34:42.597Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-07-05T00:34:59.787Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+
+    </body>
+</html>
+
